@@ -134,17 +134,17 @@ async function seed() {
       companyName: inv.companyName || '',
       gstin: inv.gstin || '',
       vendorId: rawInv.vendorId || 'usr-vendor-1',
-      issueDate: safeDate(inv.createdAt),
-      dueDate: safeDate(inv.createdAt),
+      issueDate: safeDate(rawInv.issueDate || rawInv.createdAt),
+      dueDate: safeDate(rawInv.dueDate || rawInv.createdAt),
       subtotal: (inv.subtotal || 0).toString(),
       taxAmount: (inv.taxAmount || 0).toString(),
-      securityDeposit: (inv.securityDeposit || 0).toString(),
-      discountAmount: (inv.discountAmount || 0).toString(),
+      securityDeposit: (rawInv.securityDepositAmount || rawInv.securityDeposit || 0).toString(),
+      discountAmount: (rawInv.discountAmount || 0).toString(),
       totalAmount: (inv.totalAmount || 0).toString(),
       amountPaid: (inv.paidAmount || 0).toString(),
-      paymentStatus: inv.paymentStatus === 'paid' ? 'paid' : inv.paymentStatus === 'partial' ? 'partially_paid' : 'unpaid',
-      notes: inv.notes || '',
-      createdAt: safeDate(inv.createdAt)
+      paymentStatus: rawInv.paymentStatus === 'paid' ? 'paid' : rawInv.paymentStatus === 'partial' ? 'partially_paid' : 'unpaid',
+      notes: rawInv.notes || '',
+      createdAt: safeDate(rawInv.createdAt || rawInv.issueDate)
     }).onConflictDoNothing();
   }
 
@@ -164,13 +164,14 @@ async function seed() {
   // Seed Coupons
   for (let idx = 0; idx < INITIAL_COUPONS.length; idx++) {
     const c = INITIAL_COUPONS[idx];
+    const rawC = c as any;
     await db.insert(schema.couponsTable).values({
-      id: c.id || `cpn-${c.code.toLowerCase()}-${idx}`,
+      id: rawC.id || `cpn-${c.code.toLowerCase()}-${idx}`,
       code: c.code,
-      discountPercent: (c.discountPercent || 10).toString(),
-      maxDiscount: (c.maxDiscount || 2000).toString(),
-      validUntil: c.validUntil ? safeDate(c.validUntil) : null,
-      isActive: c.isActive
+      discountPercent: (c.discountPercentage || 10).toString(),
+      maxDiscount: (rawC.maxDiscount || 2000).toString(),
+      validUntil: rawC.validUntil ? safeDate(rawC.validUntil) : null,
+      isActive: rawC.isActive !== undefined ? rawC.isActive : true
     }).onConflictDoNothing();
   }
 
