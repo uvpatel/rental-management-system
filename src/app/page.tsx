@@ -1,63 +1,129 @@
-import Image from "next/image";
+'use client';
+
+import Link from 'next/link';
+import { Layers, Store, Building2, ShieldCheck, Sparkles, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent } from '@/components/ui/card';
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-purple-500 selection:text-white">
+      {/* Top Header */}
+      <header className="border-b border-slate-800 bg-slate-900/50 backdrop-blur py-4 px-6">
+        <div className="container max-w-6xl mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-2 font-bold text-xl tracking-tight">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-purple-600 to-indigo-500 flex items-center justify-center text-white shadow-md">
+              <Layers className="w-5 h-5" />
+            </div>
+            <span>Rental<span className="text-purple-400">Flow</span></span>
+            <Badge variant="outline" className="text-[10px] border-purple-800 text-purple-400">
+              Odoo ERP Hackathon
+            </Badge>
+          </div>
+          <div className="flex items-center gap-3">
+            <Link href="/store">
+              <Button size="sm" className="bg-purple-600 hover:bg-purple-700 text-white font-semibold text-xs">
+                Launch Online Storefront
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </header>
+
+      {/* Hero Section */}
+      <main className="container max-w-6xl mx-auto py-16 px-4 flex-1 flex flex-col justify-center space-y-12">
+        <div className="text-center max-w-3xl mx-auto space-y-4">
+          <Badge className="bg-purple-500/20 text-purple-300 border-purple-400/30 text-xs px-3 py-1 gap-1.5 inline-flex">
+            <Sparkles className="w-3.5 h-3.5" /> End-to-End Enterprise Rental ERP Solution
+          </Badge>
+          <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-200 to-purple-400 bg-clip-text text-transparent">
+            Rental Management System
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+          <p className="text-slate-400 text-sm sm:text-base leading-relaxed">
+            Prevent double-booking, manage flexible time-based rates (hourly/daily/weekly), process pick-ups and returns, calculate late fees automatically, and generate GST tax invoices.
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        {/* Multi-Role Quick Entry Hub Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto w-full">
+          {/* Card 1: Customer Storefront */}
+          <Card className="bg-slate-900/80 border-slate-800 hover:border-purple-500/50 transition-all duration-300 flex flex-col justify-between p-6 space-y-4 group">
+            <div className="space-y-3">
+              <div className="w-12 h-12 rounded-2xl bg-purple-500/10 text-purple-400 flex items-center justify-center font-bold">
+                <Store className="w-6 h-6" />
+              </div>
+              <div>
+                <Badge className="bg-purple-950 text-purple-300 border-purple-800 text-[10px] mb-1">Customer Portal</Badge>
+                <h3 className="text-lg font-bold text-white group-hover:text-purple-400 transition-colors">Online Storefront</h3>
+                <p className="text-xs text-slate-400 pt-1">
+                  Browse rentable products, pick dates with real-time stock availability, select variants, create quotations, and checkout with security deposit.
+                </p>
+              </div>
+              <ul className="space-y-1.5 text-xs text-slate-300 pt-2">
+                <li className="flex items-center gap-1.5"><CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> Date-range availability check</li>
+                <li className="flex items-center gap-1.5"><CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> Quotation cart & checkout</li>
+                <li className="flex items-center gap-1.5"><CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> Order status tracking stepper</li>
+              </ul>
+            </div>
+            <Link href="/store">
+              <Button className="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold text-xs gap-1.5">
+                Enter Storefront <ArrowRight className="w-4 h-4" />
+              </Button>
+            </Link>
+          </Card>
+
+          {/* Card 2: Vendor Portal */}
+          <Card className="bg-slate-900/80 border-slate-800 hover:border-indigo-500/50 transition-all duration-300 flex flex-col justify-between p-6 space-y-4 group">
+            <div className="space-y-3">
+              <div className="w-12 h-12 rounded-2xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center font-bold">
+                <Building2 className="w-6 h-6" />
+              </div>
+              <div>
+                <Badge className="bg-indigo-950 text-indigo-300 border-indigo-800 text-[10px] mb-1">Vendor Portal</Badge>
+                <h3 className="text-lg font-bold text-white group-hover:text-indigo-400 transition-colors">Orders & Warehouse Operations</h3>
+                <p className="text-xs text-slate-400 pt-1">
+                  Manage inventory, process pick-up handovers, inspect returned equipment condition, auto-calculate late fees, and manage products.
+                </p>
+              </div>
+              <ul className="space-y-1.5 text-xs text-slate-300 pt-2">
+                <li className="flex items-center gap-1.5"><CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> Pickup & Return handovers</li>
+                <li className="flex items-center gap-1.5"><CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> Automatic late return penalties</li>
+                <li className="flex items-center gap-1.5"><CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> Product variants & pricing</li>
+              </ul>
+            </div>
+            <Link href="/admin/orders">
+              <Button className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs gap-1.5">
+                Vendor Operations <ArrowRight className="w-4 h-4" />
+              </Button>
+            </Link>
+          </Card>
+
+          {/* Card 3: Admin Backoffice */}
+          <Card className="bg-slate-900/80 border-slate-800 hover:border-emerald-500/50 transition-all duration-300 flex flex-col justify-between p-6 space-y-4 group">
+            <div className="space-y-3">
+              <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center font-bold">
+                <ShieldCheck className="w-6 h-6" />
+              </div>
+              <div>
+                <Badge className="bg-emerald-950 text-emerald-300 border-emerald-800 text-[10px] mb-1">Admin Backoffice</Badge>
+                <h3 className="text-lg font-bold text-white group-hover:text-emerald-400 transition-colors">Settings & Analytics Reports</h3>
+                <p className="text-xs text-slate-400 pt-1">
+                  Full control over GST configuration, user role permissions, printable tax invoices, Recharts analytics, and CSV exports.
+                </p>
+              </div>
+              <ul className="space-y-1.5 text-xs text-slate-300 pt-2">
+                <li className="flex items-center gap-1.5"><CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> Interactive charts & dashboards</li>
+                <li className="flex items-center gap-1.5"><CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> Printable PDF GST Invoices</li>
+                <li className="flex items-center gap-1.5"><CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> One-click CSV/Excel export</li>
+              </ul>
+            </div>
+            <Link href="/admin/reports">
+              <Button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs gap-1.5">
+                Admin Reports & Config <ArrowRight className="w-4 h-4" />
+              </Button>
+            </Link>
+          </Card>
         </div>
       </main>
     </div>
