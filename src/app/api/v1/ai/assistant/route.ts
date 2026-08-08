@@ -1,34 +1,65 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
+import { ZodError } from "zod";
 import {
-  generateOrderOperationalSummary,
   enhanceReturnNotes,
+  generateChatbotResponse,
   generateExecutiveReportNarrative,
+  generateOrderOperationalSummary,
 } from "@/server/services/aiService";
+import { aiAssistantRequestSchema } from "@/server/validation/aiAssistant";
 
-export async function POST(req: NextRequest) {
+export const runtime = "nodejs";
+export const maxDuration = 30;
+
+export async function POST(request: Request) {
   try {
-    const body = await req.json();
-    const { action, orderId, notes, prompt } = body;
+    const body = aiAssistantRequestSchema.parse(await request.json());
+    const action = body.action ?? "chat";
 
-    let responseText = "";
-
-    if (action === "order_summary" && orderId) {
-      responseText = await generateOrderOperationalSummary(orderId);
-    } else if (action === "return_notes") {
-      responseText = await enhanceReturnNotes(notes || "");
-    } else if (action === "report_narrative") {
-      responseText = await generateExecutiveReportNarrative();
-    } else {
-      responseText = `Rental AI Assistant: Based on our current catalog, we offer camera systems, audio gear, generators, and staging equipment with transparent 18% GST tax rates, free deposit refunding upon undamaged inspection, and immediate availability checks! ${
-        prompt ? `Regarding your question: "${prompt}", all items can be reserved online in real-time.` : ""
-      }`;
+    let text: string;
+    switch (action) {
+      case "order_summary":
+        text = await generateOrderOperationalSummary(body.orderId!);
+        break;
+      case "return_notes":
+        text = await enhanceReturnNotes(body.notes ?? "");
+        break;
+      case "report_narrative":
+        text = await generateExecutiveReportNarrative();
+        break;
+      default:
+        text = await generateChatbotResponse(body.prompt!, body.messages);
     }
 
-    return NextResponse.json({ data: { text: responseText } });
-  } catch (err: any) {
+    return NextResponse.json({ data: { text } });
+  } catch (error) {
+    console.error("AI assistant request failed", error);
+
+    if (error instanceof SyntaxError) {
+      return NextResponse.json(
+        { error: { code: "INVALID_JSON", message: "Request body must be valid JSON." } },
+        { status: 400 },
+      );
+    }
+
+    if (error instanceof ZodError) {
+      return NextResponse.json(
+        { error: { code: "VALIDATION_ERROR", message: error.issues[0]?.message ?? "Invalid request." } },
+        { status: 400 },
+      );
+    }
+
+    const message = error instanceof Error ? error.message : "AI Assistant failed";
+    if (message === "GEMINI_NOT_CONFIGURED") {
+      return NextResponse.json(
+        { error: { code: message, message: "GEMINI_API_KEY is not configured on the server." } },
+        { status: 503 },
+      );
+    }
+
     return NextResponse.json(
-      { error: { code: "INTERNAL_ERROR", message: err.message || "AI Assistant failed" } },
-      { status: 500 }
+      { error: { code: "AI_PROVIDER_ERROR", message: "The AI service could not complete this request." } },
+      { status: 502 },
     );
   }
 }
